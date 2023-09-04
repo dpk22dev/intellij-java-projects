@@ -22,4 +22,12 @@ public class UserRepository {
         return users.remove( name );
     }
 
+    public static String getUserWithSalutation( String name ){
+        return "Mr " + name;
+    }
+
+    public static String getBohr( ){
+        return "Mr " + "Neils Bohr";
+    }
+
 }

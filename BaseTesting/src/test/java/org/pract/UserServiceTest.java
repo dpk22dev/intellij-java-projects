@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pract.exception.UserAlreadyExistsException;
 
@@ -15,9 +13,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /*
 to demonstrate features of mock testing
@@ -122,5 +119,36 @@ public class UserServiceTest {
     void checkException() {
         when( userRepository.addUser(anyString()) ).thenThrow( UserAlreadyExistsException.class );
         assertThrowsExactly( UserAlreadyExistsException.class, () -> userService.addUser("abc"));
+    }
+
+    @Test
+    void staticMethodCheck() {
+        // below doesn't work as getUserWithSalutation is static method
+        //when( UserRepository.getUserWithSalutation( anyString() ) ).thenReturn("Mr " + ArgumentMatchers.anyString() );
+        // important to close resource so do it in try block
+        try (MockedStatic<UserRepository> userRepositoryMockedStatic = Mockito.mockStatic(UserRepository.class)) {
+            userRepositoryMockedStatic.when(UserRepository::getBohr).thenReturn("Mr Neils Bohr");
+            assertEquals(userService.getBohr(), "Mr Neils Bohr");
+        }
+    }
+
+    @Test
+    void staticReturnMethod() {
+        try(MockedStatic<UserRepository> userRepositoryMockedStatic = Mockito.mockStatic(UserRepository.class)){
+            userRepositoryMockedStatic.when(()->UserRepository.getUserWithSalutation("alpha"))
+                    .thenReturn("Mr alpha");
+            assertEquals( userService.getSalutedUser("alpha"), "Mr alpha" );
+        }
+    }
+
+    @Test
+    void addUserTestReturn() {
+        doReturn(true).when( userRepository ).addUser("alpha");
+        assertEquals( true, userService.addUser("alpha"));
+        //when(flowerService.isABigFlower(eq("poppy"), anyInt())).thenReturn(true);
+        // another way to do above
+        when( userRepository.addUser( eq("alpha") ) ).thenReturn(true );
+        assertTrue( userService.addUser("alpha") );
+
     }
 }

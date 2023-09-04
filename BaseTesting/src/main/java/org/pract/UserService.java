@@ -24,4 +24,11 @@ public class UserService {
         return userRepository.removeUser(name);
     }
 
+    public String getSalutedUser( String name ){
+        return UserRepository.getUserWithSalutation(name);
+    }
+
+    public String getBohr(){
+        return userRepository.getBohr();
+    }
 }
