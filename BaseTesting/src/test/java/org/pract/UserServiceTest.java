@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pract.exception.UserAlreadyExistsException;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,9 +37,38 @@ public class UserServiceTest {
     injects the mocks that are created with the @Mock (or @Spy) annotations into this instance.
      */
 
-    @Mock
-    UserService mockedUserService;
     private AutoCloseable closeable;
+
+// define classes here itself to test such cases start
+// If you don't mark static below classes
+// Cannot instantiate @InjectMocks field named 'calculator'!
+// Cause: the type 'Calculator' is an inner non static class.
+    static class RandomGenerator{
+        public int giveMeNumber(){
+            return 0;
+        }
+    }
+
+    static class Calculator{
+        RandomGenerator rg;
+        Calculator(){
+            rg = new RandomGenerator();
+        }
+
+        public int addRandomNumbers(){
+            int x = rg.giveMeNumber();
+            int y = rg.giveMeNumber();
+            return x + y;
+        }
+    }
+
+// // define classes here itself to test such cases ends
+
+    @Mock
+    RandomGenerator randomGenerator;
+
+    @InjectMocks
+    Calculator calculator;
 
     @BeforeEach
     void initService() {
@@ -62,12 +94,33 @@ public class UserServiceTest {
 
     @Test
     void userServiceGetAlbert() {
-        when( mockedUserService.getAlbert() ).thenReturn("tom n jerry");
-        assertEquals(mockedUserService.getAlbert(), "tom n jerry" );
+        assertEquals(userService.getAlbert(), "albert einstein" );
+    }
+
+
+    @Test
+    void randomSum() {
+        when( randomGenerator.giveMeNumber() ).thenReturn(9);
+        int x = calculator.addRandomNumbers();
+        assertEquals(x,18);
+    }
+
+    @Mock
+    UserRepository userRepository;
+
+    @InjectMocks
+    UserService userService;
+
+    @Test
+    void addUserTest() {
+        when( userRepository.addUser( anyString() )).thenReturn( true );
+        boolean x = userService.addUser("abc");
+        assertTrue( x );
     }
 
     @Test
-    void mockAsMethodParam( @Mock UserService userService ) {
-
+    void checkException() {
+        when( userRepository.addUser(anyString()) ).thenThrow( UserAlreadyExistsException.class );
+        assertThrowsExactly( UserAlreadyExistsException.class, () -> userService.addUser("abc"));
     }
 }
