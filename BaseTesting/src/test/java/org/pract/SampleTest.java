@@ -10,6 +10,9 @@ import java.util.*;
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+to demonstrate features of assertions
+ */
 public class SampleTest {
 /*
     @BeforeEach
