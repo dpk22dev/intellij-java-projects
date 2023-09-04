@@ -7,6 +7,9 @@ but my project was using java v8
 changed settings in intellij to use v20 globally as well as in project structure.
 Not exactly sure how many places i have updated, it might not break other projects
 
+### annotation processor
+annotation processor needs to be enabled in intellij to make it work correctly
+
 ### second build was very slow, i did below:
 increased build heap to 2G
 disabled extra extensions in plugins
