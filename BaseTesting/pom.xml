@@ -38,6 +38,16 @@
                 <version>1.18.20</version>
                 <scope>provided</scope>
             </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.13.0</version>
+        </dependency>
     </dependencies>
 
 </project>
