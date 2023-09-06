@@ -1,6 +1,7 @@
 package org.pract.loadbalancer.repository;
 
 import org.pract.loadbalancer.exception.PathNotFoundException;
+import org.pract.loadbalancer.exception.ServiceNotFoundException;
 import org.pract.loadbalancer.model.ServiceRegistrationRequest;
 import org.pract.loadbalancer.service.ServiceIface;
 
@@ -31,6 +32,9 @@ public class ServiceRepository {
     }
 
     public ServiceIface getService(String path) {
+        if( serviceMap.get(path) == null ){
+            throw new ServiceNotFoundException(path);
+        }
         return serviceMap.get( path );
     }
 }

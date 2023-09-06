@@ -11,6 +11,7 @@ import org.pract.exception.UserAlreadyExistsException;
 
 import java.util.List;
 
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,6 +90,8 @@ public class UserServiceTest {
         assertFalse( myList.add("x") );
     }
 
+
+
     @Test
     void userServiceGetAlbert() {
         assertEquals(userService.getAlbert(), "albert einstein" );
@@ -113,6 +116,16 @@ public class UserServiceTest {
         when( userRepository.addUser( anyString() )).thenReturn( true );
         boolean x = userService.addUser("abc");
         assertTrue( x );
+    }
+
+    @Test
+    void mockSampleOne() {
+        // mocking by  method name
+        when( userRepository.addUser( anyString() )).thenAnswer( i -> {
+            i.getArgument(0);
+            return true;
+        } );
+        assertTrue( userRepository.addUser("alpha"));
     }
 
     @Test

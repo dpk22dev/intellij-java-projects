@@ -2,6 +2,8 @@ package org.pract;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.*;
@@ -34,6 +36,14 @@ public class SampleTest {
         System.out.println("after all test");
     }
 */
+Logger logger = LoggerFactory.getLogger(SampleTest.class);
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
+
+    @Test
+    void checkLoggerAndResourceBundle(){
+        String sleepms = resourceBundle.getString("sleeptime_ms");
+        logger.info("inside logger {}", sleepms);
+    }
 
     @Test
     void equalityCheck() {
